@@ -39,8 +39,8 @@ def import_data(image_source_file, label_source_file):
     misc.log("Data import successful")
     return qaPairs(ndarr_imgs, ndarr_labs)
 
-images_source = "C:/Users/morus/Downloads/resources/train-images.idx3-ubyte"
-labels_source = "C:/Users/morus/Downloads/resources/train-labels.idx1-ubyte"
+images_source = "resources/train-images.idx3-ubyte"
+labels_source = "resources/train-labels.idx1-ubyte"
 data = import_data(images_source,labels_source)
 
 for i in range(2):
