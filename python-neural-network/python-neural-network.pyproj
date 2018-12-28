@@ -4,13 +4,15 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>67d2d814-dfe5-482f-bab0-806b6f24f0ae</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>python_neural_network.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>python-neural-network</Name>
     <RootNamespace>python-neural-network</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
+    <InterpreterId>Global|PythonCore|3.7</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,10 +23,16 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="misc.py">
+    <Compile Include="importdata.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="python_neural_network.py" />
+    <Compile Include="neuralnetwork.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="qapairs.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="main.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="resources\" />
@@ -32,6 +40,9 @@
   <ItemGroup>
     <Content Include="resources\train-images.idx3-ubyte" />
     <Content Include="resources\train-labels.idx1-ubyte" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.7" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
