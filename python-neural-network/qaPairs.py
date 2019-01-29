@@ -3,7 +3,7 @@ Module designed to create a question-answer pairs data structure.
 """
 
 def num_to_str(c):
-    """Converts a non-negative number (up to 3 digits) into a 3 digit string"""
+    """ Converts a non-negative number (up to 3 digits) into a 3 digit string """
     if(c<10):
         return str(c)+"  "
     elif(c<100):
@@ -12,9 +12,9 @@ def num_to_str(c):
         return str(c)
 
 class QAPairs:
-    """Data structure of question-answer pairs"""
+    """ Data structure of question-answer pairs """
     def __init__(self, imgs, lbls):
-        self.images = imgs
+        self.images = imgs/255 # Converting numbers between 0-255(int) to activations 0-1(float)
         self.labels = lbls
         return
     def get_label(self, n):
@@ -31,7 +31,7 @@ class QAPairs:
             return 0
     def print_pair(self, n):
         print("Image:")
-        img = self.get_image(n)
+        img = (self.get_image(n)*255).astype(int) # Converting from activations 0-1(float) to numbers 0-255(int)
         if(img.any()):
             for i in range(28):
                 row = ""

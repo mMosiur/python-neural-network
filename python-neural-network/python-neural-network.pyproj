@@ -38,6 +38,8 @@
     <Folder Include="resources\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="resources\t10k-images.idx3-ubyte" />
+    <Content Include="resources\t10k-labels.idx1-ubyte" />
     <Content Include="resources\train-images.idx3-ubyte" />
     <Content Include="resources\train-labels.idx1-ubyte" />
   </ItemGroup>
