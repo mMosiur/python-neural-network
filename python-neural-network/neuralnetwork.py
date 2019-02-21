@@ -4,45 +4,10 @@ Module designed to construct a neural network.
 
 import numpy as np
 
-def sigmoid(x, derivative=False):
-    sigm = 1. / (1. + np.exp(-x))
-    if derivative:
-        return sigm * (1. - sigm)
-    return sigm
-
 def relu(x, derivative=False):
     x[x < 0] = 0
     if(derivative): x[x > 0] = 1
     return x
-
-class Neuron:
-    def __init__(self, nof_weights=0):
-        if(nof_weights > 0):
-            self.__bias = np.random.uniform(-1,1)
-            self.__weights = np.zeros(nof_weights, 'float')
-            for i in range(nof_weights):
-                self.__weights[i] = np.random.uniform(-1,1)
-    @property
-    def activation(self):
-        return self.__activation
-    @activation.setter
-    def activation(self, value):
-        self.__activation = value
-    @property
-    def bias(self):
-        return self.__bias
-    @bias.setter
-    def bias(self, value):
-        self.__bias = value
-    @property
-    def weights(self):
-        return self.__weights
-    @weights.setter
-    def weights(self, values):
-        l = len(self.__weights)
-        if(l == len(values)):
-            for i in range(l):
-                self.__weights[i] = values[i]
 
 class Layer:
     def __init__(self, nof_neurons, nof_neurons_prev):
