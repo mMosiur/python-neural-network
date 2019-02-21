@@ -3,7 +3,6 @@ Module designed to construct a neural network.
 """
 
 import numpy as np
-from math import ceil
 
 def sigmoid(x, derivative=False):
     sigm = 1. / (1. + np.exp(-x))
@@ -11,11 +10,13 @@ def sigmoid(x, derivative=False):
         return sigm * (1. - sigm)
     return sigm
 
+def relu(x, derivative=False):
+    x[x < 0] = 0
+    if(derivative): x[x > 0] = 1
+    return x
+
 class Neuron:
     def __init__(self, nof_weights=0):
-        self.__activation = None
-        self.__bias = None
-        self.__weights = None
         if(nof_weights > 0):
             self.__bias = np.random.uniform(-1,1)
             self.__weights = np.zeros(nof_weights, 'float')
@@ -45,83 +46,44 @@ class Neuron:
 
 class Layer:
     def __init__(self, nof_neurons, nof_neurons_prev):
-        self.neurons = np.zeros(nof_neurons, 'O')
-        for i in range(nof_neurons):
-            self.neurons[i] = Neuron(nof_neurons_prev)
-        return
-    def get_layer_activations(self):
-        a = np.array([])
-        for n in self.neurons:
-            a = np.append(a, n.activation)
-        return a.reshape(-1,1)
-    def get_layer_biases(self):
-        b = np.array([])
-        for n in self.neurons:
-            b = np.append(b, n.bias)
-        return b.reshape(-1,1)
-    def get_layer_weights(self):
-        w = np.array([])
-        for n in self.neurons:
-            w = np.append(w, n.weights)
-        return w.reshape(len(self.neurons), -1)
+        self.activations = np.zeros(nof_neurons)
+        if(nof_neurons_prev > 0):
+            self.biases = np.zeros(nof_neurons)
+            self.weights = np.random.randn(nof_neurons, nof_neurons_prev) * np.sqrt(2 / nof_neurons_prev)
 
 class NeuralNetwork:
     def __init__(self, structure):
-        self.layers = np.array([])
+        l = len(structure)
+        self.layers = np.empty(l, Layer)
         nof_neurons = 0
-        for i in structure:
-            nof_neurons_prev = nof_neurons
-            nof_neurons = i
-            self.layers = np.append(self.layers, Layer(nof_neurons, nof_neurons_prev))
-        return
-    
-    def set_layer_activation(self, index, values):
-        layer = self.layers[index]
-        l = len(layer.neurons)
-        values = (np.array(values)).ravel()
-        if(l - len(values)):
-            return True
-            #raise IndexError("Nof values and nof neurons don't match.")
         for i in range(l):
-            layer.neurons[i].activation = values[i]
-        return False
+            nof_neurons_prev = nof_neurons
+            nof_neurons = structure[i]
+            self.layers[i] = Layer(nof_neurons, nof_neurons_prev)
 
     def think(self, input_data):
-        input_data = np.array(input_data).astype(float)
-        if(self.set_layer_activation(0, input_data)):
-            print("Incorrect input data")
-            return
+        input_data = np.array(input_data).astype(float).ravel()
+        self.layers[0].activations = input_data
         for i in range(1, len(self.layers)):
-            prev_a = self.layers[i-1].get_layer_activations()
-            w = self.layers[i].get_layer_weights()
-            b = self.layers[i].get_layer_biases()
+            prev_a = self.layers[i - 1].activations
+            w = self.layers[i].weights
+            b = self.layers[i].biases
             z = w.dot(prev_a) + b
-            a = sigmoid(z)
-            self.set_layer_activation(i, a)
-        return self.layers[-1].get_layer_activations()
-    def answer(self, input_data):
-        def convert_from_binary(x):
-            x = x.ravel()
-            result = 0
-            for i in range(0,4):
-                result += x[-i - 1] * 2**i
-            return result
-        guess = self.think(input_data).round()
-        return int(convert_from_binary(guess))
-        #return self.think(input_data).argmax()
-    def test(self, input_data, answer_sheet):
+            a = relu(z)
+            self.layers[i].activations = a
+        return self.layers[-1].activations
+
+    def test(self, data):
         result = [0,0] # [all_answers, right_answers]
-        l = len(input_data)
-        assert(l == len(answer_sheet)), "input_data and answer_sheet lengths dont match up"
-        l = ceil(l/10)
-        print("Testing the network...")
-        for i in range(10):
-            print("{}0%".format(i))
-            for input, answer in zip(input_data[i*l:(i+1)*l], answer_sheet[i*l:(i+1)*l]):
-                guess = self.answer(input)
-                if(guess == answer): result[1] += 1
-                result[0] += 1
-        print("100%")
+        for pair in data:
+            guess = self.think(pair.image).argmax()
+            if(guess == pair.label): result[1] += 1
+            result[0] += 1
         return result
-    def train(self, training_set, answers):
-        return
+
+    def train(self, training_set):
+        nof_batches = int(np.ceil(len(training_set) / 100))
+        print("There will be {} batches of 100.".format(nof_batches))
+        for i in range(nof_batches):
+            #training on a single batch
+            pass

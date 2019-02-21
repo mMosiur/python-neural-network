@@ -29,9 +29,6 @@
     <Compile Include="neuralnetwork.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="qapairs.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="main.py" />
   </ItemGroup>
   <ItemGroup>
